@@ -38,10 +38,17 @@ define('FOPEN_READ_WRITE_CREATE_STRICT',		'x+b');
 
 define('CH_TABLE_MENU',	    	'menu');
 define('CH_TABLE_MENUTYPE',		'menutype');
-define('CH_TABLE_ORDER',		'order');
+define('CH_TABLE_ORDER',		'`order`');
 define('CH_TABLE_RECORD',		'record');
 define('CH_TABLE_USER',		    'user');
 define('CH_TABLE_ORDERSHIP',	'ordership');
+
+
+define('INPUT_ERROR_NOVAR', -10001);
+define('FAILED_ERROR_NO_ORDER', -10002);
+define('FAILED_ERROR_NO_SELECT', -10003);
+define('SUCCES_CODE', 0);
+
 
 /* End of file constants.php */
 /* Location: ./application/config/constants.php */
