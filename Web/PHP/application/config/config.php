@@ -328,7 +328,7 @@ $config['compress_output'] = FALSE;
 | regarding date handling.
 |
 */
-date_default_timezone_set('Asia/ShangHai');
+//date_default_timezone_set('Asia/ShangHai');
 $config['time_reference'] = 'local';
 //$config['time_reference'] = 'gmt';
 
