@@ -43,7 +43,13 @@ class Orderlist extends CI_Controller {
 	private function get_menu()
 	{
 		$query = $this->db->get_where(CH_TABLE_MENU);
-		return $query->result();
+		$menu = array();
+		foreach($query->result() as $key => $val)
+		{
+			$menu[$val->id] = $val;
+		}
+		return $menu;
+		
 	}
 
 	private function get_order($id)

@@ -5,7 +5,7 @@ class Welcome extends CI_Controller {
 	 private static $now = 0;
 	 private static $meal_time = array(
 		 'lunch' => array('00:00', '12:30'),
-		 'dinner' => array('17:00', '23:30'),
+		 'dinner' => array('17:00', '23:59'),
 	 );
 	 
 	 public function __construct()
