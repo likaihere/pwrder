@@ -5,7 +5,7 @@ class Welcome extends CI_Controller {
 	 private static $now = 0;
 	 private static $meal_time = array(
 		 'lunch' => array('00:00', '12:30'),
-		 'dinner' => array('17:00', '18:30'),
+		 'dinner' => array('17:00', '23:30'),
 	 );
 	 
 	 public function __construct()
@@ -21,6 +21,7 @@ class Welcome extends CI_Controller {
 		$this->load->view('welcome_message', array(
 				'menu_data' => $this->get_menu(self::$menu_type),
 				'order_id' => $oid,
+				'meal_time' => self::$meal_time,
 			));
 	}
 
@@ -41,44 +42,82 @@ class Welcome extends CI_Controller {
 		
 		$post = $this->input->post();
 
-		if (empty($post)) {
+		if (empty($post))
+		{
 			$message = $this->get_message();
 			echo json_encode($message);
 			exit();
-		} else {
-			
-			$datas = array();
-			$mids = $post['ids'];
-			
-			foreach($mids as $mid)
-			{
-				$price = 0;
-				$query = $this->db->get_where(CH_TABLE_MENU, array('id' => $mid));
-				$ret = $query->result();
-
-				if(count($ret) > 0)
-				{
-					$price = $ret[0]->price;
-				}
-				
-				$datas[] = array(
-					'tid' => self::$menu_type,
-					'oid' => $oid,
-					'mid' => $mid,
-					'price' => $price,
-					'usertoken' => $this->get_user_unique(),
-					'lastupdate' => time(),
-				);
-			}
-
-			$this->db->insert_batch(CH_TABLE_RECORD, $datas);
 		}
+		
+		$datas_order = array();
+		$mids = $post['ids'];
+		$has_one = FALSE;
+		$menu_duplicate_id = 0;
+			
+		foreach($mids as $mid)
+		{
+			$has_one = $this->check_order_menu($oid, $mid);
+			if($has_one)
+			{
+				$menu_duplicate_id = $mid;
+				break;
+			}
+				
+			$price = 0;
+			$query = $this->db->get_where(CH_TABLE_MENU, array('id' => $mid));
+			$ret = $query->result();
 
-		$message = $this->get_message(SUCCES_CODE, '下单成功');
+			if(count($ret) > 0)
+			{
+				$price = $ret[0]->price;
+			}
+				
+			$datas_order[] = array(
+				'tid' => self::$menu_type,
+				'oid' => $oid,
+				'mid' => $mid,
+				'price' => $price,
+				'usertoken' => $this->get_user_unique(),
+				'lastupdate' => self::$now,
+			);
+		}
+		
+		
+		if($has_one)
+		{
+			$query = $this->db->get_where(CH_TABLE_MENU, array('id' => $menu_duplicate_id));
+			$menu = $query->result();
+			$message = $this->get_message(FAILED_ERROR_DUPLICATE_ORDER, '已经订过' . $menu[0]->name . ',请重新选择.');
+		}
+		else
+		{
+			$r = $this->db->insert_batch(CH_TABLE_RECORD, $datas_order);
+			if($r)
+			{
+				$message = $this->get_message(SUCCES_CODE, '下单成功');
+			}
+			else
+			{
+				$message = $this->get_message(FAILED_ERROR_ADD_RECORD, '下单失败 X_X');
+			}
+		}
+		
 		echo json_encode($message);
+		exit();
+	}
+
+	private function check_order_menu($oid, $mid)
+	{
+		if(empty($oid) || empty($mid)){
+			return TRUE;
+		}
+		
+		$query = $this->db->get_where(CH_TABLE_RECORD, array('oid' => $oid, 'mid' => $mid));
+		$ret = $query->result();
+		return count($ret) > 0;
 	}
 	
-	public function add_order()
+	private function add_order()
 	{
 		$order_id = 0;
 
@@ -121,7 +160,7 @@ class Welcome extends CI_Controller {
 			'msg' => $message,
 		);
 	}
-	
+
     /**
 	 * @Function: get_menu;
 	 * @Param: $type;

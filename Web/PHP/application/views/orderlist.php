@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>吃货下单</title>
+	<title>当前订单</title>
     <link rel="stylesheet" href="<?php echo base_url(); ?>static/css/style.css" type="text/css" media="screen" />
     <script type="text/javascript" src="<?php echo base_url(); ?>static/js/jquery.js"></script>
     <script type="text/javascript">
@@ -42,22 +42,6 @@
 			});
 		});
 		
-		$('#makedeal').click(function(){
-			$.post('<?php echo site_url('welcome/add_record') ?>', {'ids' : ids}, function(result){
-				if(result['code'] == 0){
-					//TODO
-					window.location.href = '<?php echo site_url('orderlist/index/' . $order_id) ;?>';
-				} else {
-					//TODO
-				}
-				console.log(result['code'], ids);
-				alert(result['msg']);
-				$('#tip').html(result['msg']);
-				
-			}, 'json');
-/* 			alert('下单测试'); */
-		});
-		
 		function arrRemoveItem(arr, item){
 			var index = arr.indexOf(item);
 			if(-1 != index) {
@@ -74,40 +58,30 @@
 
 <body>
 
-	<h1 class="title"><?php echo anchor(site_url('o/'.$order_id), '查看订单', array('title' => '查看订单')); ?></h1>
+	<h1 class="title"><?php echo anchor(site_url('welcome'), '点菜', array('title' => '点菜')); ?></h1>
 	<!-- <h2>order id = <?php echo $order_id; ?></h2> -->
-
-	<div id="tip">
-		下单时间:
-		中午<?php echo $meal_time['lunch'][0] . ' ~ ' . $meal_time['lunch'][1];?>;
-		下午<?php echo $meal_time['dinner'][0] . ' ~ ' . $meal_time['dinner'][1];?>.
-	</div>
-
-	<div style="float:left;width:40%;">
-		<table class="bordered" id="menu">
+	
+	<div id="tip"><?php echo date('Y-m-d H:i', time()); ?> </div>
+	
+	
+	<div style="">
+		<table class="bordered" id="orderlist">
 			    <tr>
 			        <th>#</th>        
 			        <th>菜名</th>
 			        <th>单价</th>
+			        <th style="width:160px">下单时间</th>			        			        			        
 			    </tr>
-		<?php foreach($menu_data as $val): ?>
-			    <tr val="<?php echo $val->id;?>" class="tb">
-			        <td><?php echo $val->id;?></td>        
-			        <td><?php echo $val->name;?></td>
+		<?php foreach($record_data as $val): ?>
+			    <tr val="<?php echo $menu[$val->mid]->id;?>" class="tb">
+			        <td><?php echo $menu[$val->mid]->id;?></td>
+			        <td><?php echo $menu[$val->mid]->name;?></td>
 			        <td>￥<?php printf('%.2f', $val->price * 0.01);?></td>
+			        <td><?php echo date('m/d H:i', $val->lastupdate);?></td>			        			        
 			    </tr>
 		<?php endforeach; ?>
 		</table>
 	</div>
-	
-		
-	<div id="dealcontainer">
-		<table class="bordered" id="deal">
-		</table>
-		<button class="large yellow awesome" id="makedeal">下单</button>	
-	</div>
-	
-
 
 </body>
 

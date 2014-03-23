@@ -18,9 +18,28 @@ table {
     background: white;
 }
 
+a {
+	text-decoration: none;
+}
+
+#tip {
+	font-size:14px; 
+	width:100%; 
+	margin-top:5em;
+	text-indent: 2em;
+	
+	border:1px solid #CE7F8F;
+	border-radius: 6px;
+	-webkit-border-radius: 6px;
+	-moz-border-radius: 6px;	
+	height: 28px;
+	line-height: 28px;
+	
+	background: #FADEEF;
+}
 
 .bordered {
-	margin: 9em auto 3em;
+	margin: 3em auto 3em;
     border: solid #ccc 1px;
     -moz-border-radius: 6px;
     -webkit-border-radius: 6px;
@@ -142,6 +161,12 @@ table {
 	-webkit-transform:rotate(-45deg);
 	-moz-box-shadow: 0 0 1em gray;			
 	-webkit-box-shadow: 0 0 1em gray;
+}
+
+.title a{
+	color: #FFF;
+	font-size: 22px;
+	font-weight: bold;
 }
 
 .bordered tr.clicked_to_right {
