@@ -6,51 +6,43 @@
     <link rel="stylesheet" href="<?php echo base_url(); ?>static/css/style.css" type="text/css" media="screen" />
     <script type="text/javascript" src="<?php echo base_url(); ?>static/js/jquery.js"></script>
     <script type="text/javascript">
-	var ids = [];
+    
+		var mids = [];
 
-    $(function(){
-
-		$('tr.tb').click(function(){
-			var tid = $(this).parents('table').attr('id');
-			var to_class = '';
-			var mid = $(this).attr('val');
-			if(tid == 'deal'){
-				ids = arrRemoveItem(ids, mid);
-				to_class = 'clicked_to_left';
-
-			} else if (tid == 'menu') {
-				ids.push(mid);			
-				to_class = 'clicked_to_right';
-				if($(this).children('th').size() > 0){
-					return;
-				}
-			} else {
-				return;
-			}
-			
-			$(this).addClass(to_class);
-			var tr = $(this);
-			tr.parent().one('transitionend', function() {
-				var list_id = to_class == 'clicked_to_right' ? '#deal' : '#menu';
-				tr.removeClass(to_class);
-				tr.appendTo(list_id);				
-				if(to_class == 'clicked_to_right' && $('#deal').children('tbody').children().size() > 0){
-					$('#deal').show().css('width','100%').parent().show().css('width', '400px');
-				} else if (to_class == 'clicked_to_left' && $('#deal').children('tbody').children().size() == 0) {
-					$('#deal').hide().parent().hide();
+	    $(function(){
+	
+			$('tr.tb').click(function(){
+				mids.push($(this).attr('val'))
+				if(window.confirm('您确定要删除这个菜么?')){
+					var tr = $(this);
+					$.post('<?php echo site_url('orderlist/del_record') ?>', {'oid' : <?php echo $order_id;?>, 'mids' : mids}, function(result) {
+						if(result['code'] == 0){
+							$('#tip').html(result['msg']);
+							tr.animate({
+								height: "toggle"
+							}, 500, function() {
+								$(this).hide();
+							});
+														
+						} else {
+							$('#tip').html(result['msg']);							
+						}
+						
+						mids = [];
+						
+					}, 'json');
 				}
 			});
-		});
-		
-		function arrRemoveItem(arr, item){
-			var index = arr.indexOf(item);
-			if(-1 != index) {
-				arr.splice(index, 1);
+			
+			function arrRemoveItem(arr, item){
+				var index = arr.indexOf(item);
+				if(-1 != index) {
+					arr.splice(index, 1);
+				}
+				return arr;
 			}
-			return arr;
-		}
-    })
-    
+	    })
+	    
     </script>
     
 </head>
@@ -64,7 +56,8 @@
 	<div id="tip"><?php echo date('Y-m-d H:i', time()); ?> </div>
 	
 	
-	<div style="">
+	<div>
+	<?php if(count($record_data) > 0): ?>
 		<table class="bordered" id="orderlist">
 			    <tr>
 			        <th>#</th>        
@@ -81,6 +74,7 @@
 			    </tr>
 		<?php endforeach; ?>
 		</table>
+	<?php endif; ?>
 	</div>
 
 </body>

@@ -38,6 +38,8 @@ a {
 	background: #FADEEF;
 }
 
+
+
 .bordered {
 	margin: 3em auto 3em;
     border: solid #ccc 1px;
@@ -59,7 +61,14 @@ a {
 .bordered tr:hover{
 	cursor: pointer;
     background: rgba(204,204,51,0.25);
-}    
+}
+
+.bordered tr .fadeout_del{
+	filter:alpha(opacity=50);
+	opacity: 0.5;	
+	-moz-opacity:0.5;
+	-khtml-opacity: 0.5;
+}
 
 .bordered th:first-child,
 .bordered td:first-child {

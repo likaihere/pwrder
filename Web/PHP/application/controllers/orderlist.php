@@ -15,15 +15,20 @@ class Orderlist extends CI_Controller {
 		$record_data = array();
 
 		$this->load->view('orderlist', array(
+				'order_id' => $id,
 				'order_data' => $this->get_order($id),
 				'record_data' => $this->get_record($id),
 				'menu' => self::$menu,
 			));
 	}
 
-	public function del_record($oid, $rid)
+	public function del_record()
 	{
-		if(empty($oid) || empty($rid))
+		$post = $this->input->post();
+		$oid = $post['oid'];
+		$mids = $post['mids'];
+		
+		if(empty($oid) || empty($mids))
 		{
 			echo json_encode(array(
 					'code' => -1,
@@ -31,13 +36,37 @@ class Orderlist extends CI_Controller {
 				));
 			exit();
 		}
+
+		$flag = FALSE;
+		foreach($mids as $mid)
+		{
+			$ret = $this->db->delete(CH_TABLE_RECORD, array(
+						 'oid' => $oid,
+						 'mid' => $mid
+					 ));
+			if($ret && !$flag)
+			{
+				$flag = TRUE;
+			}
+		}
+
+		if($flag)
+		{
+			$message = array(
+				'code' => 0,
+				'msg' => '删除成功',
+			);			
+		}
+		else
+		{
+			$message = array(
+				'code' => -1,
+				'msg' => '删除失败',
+			);
+		}
 		
-		$query = $this->db->delete(CH_TABLE_RECORD, array(
-					 'oid' => $oid,
-					 'rid' => $rid
-			));
-		
-		var_dump($query);exit();
+		echo json_encode($message);
+		exit();
 	}
 
 	private function get_menu()
