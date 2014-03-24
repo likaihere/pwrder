@@ -53,7 +53,7 @@
 	<h1 class="title"><?php echo anchor(site_url('welcome'), '点菜', array('title' => '点菜')); ?></h1>
 	<!-- <h2>order id = <?php echo $order_id; ?></h2> -->
 	
-	<div id="tip"><?php echo date('Y-m-d H:i', time()); ?> </div>
+	<div id="tip">当前时间 : <?php echo date('Y-m-d H:i', time()); ?> </div>
 	
 	
 	<div>

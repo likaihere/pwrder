@@ -78,12 +78,13 @@
 	<!-- <h2>order id = <?php echo $order_id; ?></h2> -->
 
 	<div id="tip">
+		<?php echo anchor(site_url('menu'), '添加菜谱', array('title' => '添加菜谱  ', 'style' => 'float:right;margin-right:1em')); ?>
 		下单时间:
 		中午<?php echo $meal_time['lunch'][0] . ' ~ ' . $meal_time['lunch'][1];?>;
 		下午<?php echo $meal_time['dinner'][0] . ' ~ ' . $meal_time['dinner'][1];?>.
 	</div>
 
-	<div style="float:left;width:40%;">
+	<div style="float:left;width:45%;">
 		<table class="bordered" id="menu">
 			    <tr>
 			        <th>#</th>        
