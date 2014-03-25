@@ -1,7 +1,7 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Menu extends CI_Controller {
-	private static $menu_type = '1';
+	private static $default_menu_type = '1';
 	private static $menu = array();
 
 	public function __construct()
@@ -11,7 +11,11 @@ class Menu extends CI_Controller {
 
 	public function index()
 	{
-		$this->load->view('add_menu');
+		$this->load->model('Menu_model');
+
+		$this->load->view('add_menu', array(
+				'menu_data' => $this->Menu_model->get_menu(),
+			));
 	}
 
 	public function add()
@@ -32,7 +36,7 @@ class Menu extends CI_Controller {
 		$ret = $this->db->insert(CH_TABLE_MENU, array(
 				   'name' => $names[0],
 				   'price' => ((float) $prices[0] * 100),
-				   'tid' => self::$menu_type,
+				   'tid' => self::$default_menu_type,
 			   ));
 
 		if($ret > 0)

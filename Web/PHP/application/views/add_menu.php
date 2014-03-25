@@ -28,7 +28,11 @@
 					if(result['code'] == 0){
 						$('#tip').html(result['msg']);
 						
-						var trHtml = '<tr><td>'+menu+'</td><td>￥'+price+'</td><td></td></tr>';
+						var price_all = Math.round(price * 100).toString();
+						var priceS = price_all.substr(0, price_all.length - 2);
+						var priceE = price_all.substr(-2);
+						
+						var trHtml = '<tr><td>'+menu+'</td><td>￥'+ priceS + '.' + priceE+'</td><td></td></tr>';
 						$('#menulist').append(trHtml);
 													
 					} else {
@@ -111,14 +115,13 @@
 					<td><button class="green awesome" id="add_button" type="submit">添加</button></td>			        
 			    </tr>
 			    
-<!--
-TODO
+			    <?php foreach($menu_data as $val): ?>
 			    <tr>
-				    <td></td>
-				    <td></td>
+				    <td><?php echo $val->name; ?></td>
+				    <td>￥<?php printf('%.2f', $val->price * 0.01); ?></td>
 				    <td></td>				    				    
 			    </tr>
--->
+			    <?php endforeach; ?>
 
 		</table>
 	</div>
