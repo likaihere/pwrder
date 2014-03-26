@@ -43,7 +43,8 @@ class Menu extends CI_Controller {
 		{
 			echo json_encode(array(
 					'code' => 0,
-					'msg' => '添加成功'
+					'msg' => '添加成功',
+					'id' => $this->db->insert_id(),
 				));
 		}
 		else
@@ -53,6 +54,42 @@ class Menu extends CI_Controller {
 					'msg' => '参数不正确'
 				));			
 		}
+	}
+
+	public function delete()
+	{
+		$post = $this->input->post();
+		$ids = $post['ids'];
+
+		if(empty($ids))
+		{
+			echo json_encode(array(
+					'code' => -1,
+					'msg' => '参数不正确'
+				));
+			exit();	
+		}
+
+		$ret = $this->db->delete(CH_TABLE_MENU, array('id' => $ids[0]));
+
+		if($ret > 0)
+		{
+			$message = array(
+				'code' => 0,
+				'msg' => '删除成功',
+			);
+			
+		}
+		else
+		{
+			$message = array(
+				'code' => -2,
+				'msg' => '删除失败',
+			);
+			
+		}
+
+		echo json_encode($message);
 	}
 }
 
